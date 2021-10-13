@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { GetUser, localLogin, SignUp } from "../controllers/auth";
+import { GetUser, localLogin, SignOut, SignUp } from "../controllers/auth";
 import { validateErrors } from "../middleware/validateErrors";
 import { prisma } from "../util/prisma";
 import { isGuest } from '../middleware/isGuest';
@@ -101,4 +101,10 @@ authRoutes.post(
         .withMessage("Please enter a valid password"),
     validateErrors,
     localLogin
+);
+
+authRoutes.post(
+    "/logout",
+    isAuth,
+    SignOut
 )

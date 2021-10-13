@@ -9,13 +9,12 @@ export const createSingleOtpField = async (req: Request, res: Response) => {
         if(otp === false) {
             return;
         }
-
         const otpField = await prisma.oneTimePasswordField.create({
             data: {
-                otp_id: (otp as OneTimePassword).id,
-                name: req.params.name,
-                value: req.params.value
-            }
+                otp_id: (otp as any).id,
+                name: req.body.name,
+                value: req.body.value
+            },
         });
     
         return res.send(otpField);
@@ -38,8 +37,8 @@ export const updateSingleOtpField = async (req: Request, res: Response) => {
 
         const otpField = await prisma.oneTimePasswordField.findFirst({
             where: {
-                id: (req.params as any).id,
-                otp_id: (otp as OneTimePassword).id
+                id: parseInt((req.params as any).id),
+                otp: (otp as OneTimePassword)
             }
         });
         if(!otpField) {
@@ -80,8 +79,8 @@ export const deleteSingleOtpField = async (req: Request, res: Response) => {
 
         const otpField = await prisma.oneTimePasswordField.findFirst({
             where: {
-                id: (req.params as any).id,
-                otp_id: (otp as OneTimePassword).id
+                id: parseInt((req.params as any).id),
+                otp: (otp as OneTimePassword)
             }
         });
         if(!otpField) {
@@ -100,6 +99,7 @@ export const deleteSingleOtpField = async (req: Request, res: Response) => {
         return res.send({ ok: true });
 
     } catch (e) {
+        console.log(e);
         return res.status(500).send({
             param: "server",
             msg: "Failed to fetch password field"

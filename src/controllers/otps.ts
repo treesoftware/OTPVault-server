@@ -77,6 +77,31 @@ export const createSingleOtp = async (req: Request, res: Response) => {
     }
 
 }
+export const createMassOtp = async (req: Request, res: Response) => {
+
+    try {
+
+        const keys = (req.body.keys as { name: string, key: string, issuer: string, algorithm?: string; }[]);
+
+        await prisma.oneTimePassword.createMany({
+            data: keys.map(key => ({
+                user_id: (req.user as any).id,
+                name: key.name,
+                issuer: key.issuer,
+                algorithm: key.algorithm,
+                key: key.key
+            }))
+        });
+    
+        return res.send({ ok: true });
+    } catch (e) {
+        return res.status(500).send({
+            param: "server",
+            msg: "Failed to fetch password"
+        })
+    }
+
+}
 export const updateSingleOtp = async (req: Request, res: Response) => {
 
     try {
@@ -106,7 +131,7 @@ export const updateSingleOtp = async (req: Request, res: Response) => {
                 algorithm: req.body.algorithm,
                 digits: req.body.digits,
                 period: req.body.period,
-                updatedAt: new Date()
+                updatedAt: new Date(),
             }
         })
 

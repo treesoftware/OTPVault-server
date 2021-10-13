@@ -8,6 +8,7 @@ import { otpFieldRoutes } from './routes/otpField';
 import { sessionMiddleware } from './middleware/session';
 import passport from 'passport';
 import { InitStrategies } from './auth/Strategies';
+import { accountRoutes } from './routes/account';
 
 (async () => {
     const server = express();
@@ -21,7 +22,7 @@ import { InitStrategies } from './auth/Strategies';
     server.use(passport.session());
 
     server.use(cors({
-        origin: ["http://localhost:3000"],
+        origin: ["http://localhost:3000", (process.env.WEB_URL || "http://localhost:3002")],
         credentials: true
     }));
 
@@ -32,6 +33,7 @@ import { InitStrategies } from './auth/Strategies';
 
     // All the route handlers.
     server.use("/auth", authRoutes);
+    server.use("/account", accountRoutes);
     server.use("/otp", otpRoutes);
     server.use("/fields", otpFieldRoutes);
     

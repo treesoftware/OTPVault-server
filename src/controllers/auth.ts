@@ -1,4 +1,4 @@
-import { AES, HmacSHA256, SHA256, enc } from "crypto-js";
+import { AES, HmacSHA256, SHA256 } from "crypto-js";
 import { NextFunction, Request, Response } from "express";
 import { makeKey } from '../util/makeKey';
 import { prisma } from "../util/prisma";
@@ -81,7 +81,6 @@ export const localLogin = (req: Request, res: Response, next: NextFunction) => {
         return req.logIn(user, (err) => {
 
             if (err) {
-                console.error(err);
                 return res.status(400).send({
                     param: "email", 
                     msg: "Invalid email or password"
@@ -93,3 +92,10 @@ export const localLogin = (req: Request, res: Response, next: NextFunction) => {
     })(req, res, next);
 
 };
+
+export const SignOut = (req: Request, res: Response) => {
+
+    req.logout();
+    return res.status(200).send({ ok: true });
+
+}
