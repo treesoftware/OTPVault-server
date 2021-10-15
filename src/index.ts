@@ -21,8 +21,9 @@ import { accountRoutes } from './routes/account';
     server.use(passport.initialize());
     server.use(passport.session());
 
+    server.set('trust proxy', 1); // trust proxy in production.
     server.use(cors({
-        origin: ["http://localhost:3000", (process.env.WEB_URL || "http://localhost:3002")],
+        origin: ["http://localhost:3000", (process.env.WEB_URL || "http://localhost:3001")],
         credentials: true
     }));
 
